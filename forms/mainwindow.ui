@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>638</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>1</number>
+    </property>
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
+    <item>
+     <widget class="QLineEdit" name="addressLine"/>
+    </item>
+    <item>
+     <widget class="QWebView" name="webView">
+      <property name="url">
+       <url>
+        <string>about:blank</string>
+       </url>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::TopToolBarArea</set>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionExit"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionPrint"/>
+   <addaction name="actionBackward"/>
+   <addaction name="actionGo_Forward"/>
+   <addaction name="actionGo_Home"/>
+   <addaction name="actionStop"/>
+   <addaction name="actionReload"/>
+   <addaction name="actionGo"/>
+  </widget>
+  <action name="actionBackward">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/bacward.png</normaloff>:/icons/resources/bacward.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go Backward</string>
+   </property>
+   <property name="shortcut">
+    <string>Backspace</string>
+   </property>
+  </action>
+  <action name="actionGo_Forward">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/forward.png</normaloff>:/icons/resources/forward.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go Forward</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Right</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/stop.png</normaloff>:/icons/resources/stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="actionReload">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/reload.png</normaloff>:/icons/resources/reload.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reload</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionGo_Home">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/home.png</normaloff>:/icons/resources/home.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go Home</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/exit.png</normaloff>:/icons/resources/exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/save.png</normaloff>:/icons/resources/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/print.png</normaloff>:/icons/resources/print.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print</string>
+   </property>
+  </action>
+  <action name="actionGo">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/resources/go.png</normaloff>:/icons/resources/go.png</iconset>
+   </property>
+   <property name="text">
+    <string>Go</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKitWidgets/QWebView</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>webView</sender>
+   <signal>loadStarted()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadStarted()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>318</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>webView</sender>
+   <signal>loadFinished(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadFinished(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>318</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addressLine</sender>
+   <signal>returnPressed()</signal>
+   <receiver>actionGo</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>318</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>loadFinished(bool)</slot>
+  <slot>loadStarted()</slot>
+ </slots>
+</ui>
