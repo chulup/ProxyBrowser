@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webkitwidgets
 TARGET = ProxyBrowser
 TEMPLATE = app
 
+CONFIG += c++11
 
 SOURCES += sources/main.cpp\
         sources/mainwindow.cpp
