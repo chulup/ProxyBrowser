@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>resources/bacward.png</file>
+    <file>resources/exit.png</file>
+    <file>resources/forward.png</file>
+    <file>resources/go.png</file>
+    <file>resources/home.png</file>
+    <file>resources/print.png</file>
+    <file>resources/reload.png</file>
+    <file>resources/save.png</file>
+    <file>resources/stop.png</file>
+  </qresource>
+</RCC>
