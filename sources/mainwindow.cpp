@@ -6,6 +6,7 @@
 #include <QWebHistory>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintPreviewDialog>
+#include <QNetworkProxy>
 
 #include "constants.h"
 
@@ -17,6 +18,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->centralWidget->layout()->removeWidget(ui->addressLine);
     ui->mainToolBar->insertWidget(ui->actionGo, ui->addressLine);
+
+    QNetworkProxy proxy;
+    proxy.setType(QNetworkProxy::Socks5Proxy);
+    proxy.setHostName(PROXY_HOST);
+    proxy.setPort(PROXY_PORT);
+    proxy.setUser(PROXY_USER);
+    proxy.setPassword(PROXY_PASS);
+    QNetworkProxy::setApplicationProxy(proxy);
 }
 
 MainWindow::~MainWindow()
