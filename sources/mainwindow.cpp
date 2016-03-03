@@ -3,6 +3,11 @@
 
 #include <QLineEdit>
 #include <QtDebug>
+#include <QWebHistory>
+#include <QtPrintSupport/QPrinter>
+#include <QtPrintSupport/QPrintPreviewDialog>
+
+#include "constants.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,16 +24,30 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::updateButtons(MainWindow::ButtonVisible button)
+{
+    ui->actionReload->setVisible(button == ButtonVisible::RELOAD);
+    ui->actionStop->setVisible(button == ButtonVisible::STOP);
+    ui->addressLine->setText(ui->webView->url().toString());
+    ui->actionBackward->setEnabled(ui->webView->history()->canGoBack());
+    ui->actionForward->setEnabled(ui->webView->history()->canGoForward());
+}
+
 void MainWindow::loadStarted() {
     qInfo() << "loadStarted";
-    ui->actionReload->setVisible(false);
-    ui->actionStop->setVisible(true);
+    updateButtons(ButtonVisible::STOP);
 }
 
 void MainWindow::loadFinished(bool result){
     qInfo() << "loadFinished(" << result << ")";
-    ui->actionReload->setVisible(true);
-    ui->actionStop->setVisible(false);
+    updateButtons(ButtonVisible::RELOAD);
+}
+
+void MainWindow::openHomePage()
+{
+    qInfo() << "loadStarted";
+    ui->addressLine->setText(HOME_PAGE);
+    ui->actionGo->trigger();
 }
 
 void MainWindow::openPage(){
@@ -40,4 +59,25 @@ void MainWindow::openPage(){
     }
     qInfo() << "openPage with address" << ui->addressLine->text();
     ui->webView->load(QUrl(ui->addressLine->text()));
+}
+
+void MainWindow::savePage()
+{
+    qInfo() << "savePage";
+}
+
+void MainWindow::printPage()
+{
+    qInfo() << "printPage";
+    QPrinter printer;
+    QPrintPreviewDialog preview(&printer);
+
+    preview.setWindowTitle("Print page \"" + ui->webView->title() + "\"");
+
+    connect(&preview, &QPrintPreviewDialog::paintRequested,
+            [&]{
+                this->ui->webView->print(&printer);
+              });
+
+    preview.exec();
 }

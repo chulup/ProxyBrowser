@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webkitwidgets
 
@@ -16,7 +16,8 @@ CONFIG += c++11
 SOURCES += sources/main.cpp\
         sources/mainwindow.cpp
 
-HEADERS  += sources/mainwindow.h
+HEADERS  += sources/mainwindow.h \
+    sources/constants.h
 
 FORMS    += forms/mainwindow.ui
 

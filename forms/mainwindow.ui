@@ -64,31 +64,43 @@
    <addaction name="actionSave"/>
    <addaction name="actionPrint"/>
    <addaction name="actionBackward"/>
-   <addaction name="actionGo_Forward"/>
+   <addaction name="actionForward"/>
    <addaction name="actionGo_Home"/>
    <addaction name="actionStop"/>
    <addaction name="actionReload"/>
    <addaction name="actionGo"/>
   </widget>
   <action name="actionBackward">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons.qrc">
      <normaloff>:/icons/resources/bacward.png</normaloff>:/icons/resources/bacward.png</iconset>
    </property>
    <property name="text">
-    <string>Go Backward</string>
+    <string>Back</string>
+   </property>
+   <property name="toolTip">
+    <string>Back</string>
    </property>
    <property name="shortcut">
     <string>Backspace</string>
    </property>
   </action>
-  <action name="actionGo_Forward">
+  <action name="actionForward">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../icons.qrc">
      <normaloff>:/icons/resources/forward.png</normaloff>:/icons/resources/forward.png</iconset>
    </property>
    <property name="text">
-    <string>Go Forward</string>
+    <string>Forward</string>
+   </property>
+   <property name="toolTip">
+    <string>Forward</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Right</string>
@@ -104,6 +116,9 @@
    </property>
    <property name="shortcut">
     <string>Esc</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionReload">
@@ -240,10 +255,127 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionReload</sender>
+   <signal>triggered()</signal>
+   <receiver>webView</receiver>
+   <slot>reload()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionForward</sender>
+   <signal>triggered()</signal>
+   <receiver>webView</receiver>
+   <slot>forward()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionBackward</sender>
+   <signal>triggered()</signal>
+   <receiver>webView</receiver>
+   <slot>back()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>savePage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionPrint</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>printPage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionGo_Home</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openHomePage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>318</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loadFinished(bool)</slot>
   <slot>loadStarted()</slot>
   <slot>openPage()</slot>
+  <slot>goBacward()</slot>
+  <slot>goForward()</slot>
+  <slot>openHomePage()</slot>
+  <slot>savePage()</slot>
+  <slot>printPage()</slot>
  </slots>
 </ui>
