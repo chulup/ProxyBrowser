@@ -7,6 +7,7 @@
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintPreviewDialog>
 #include <QNetworkProxy>
+#include <QLoggingCategory>
 
 #include "constants.h"
 
@@ -18,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->centralWidget->layout()->removeWidget(ui->addressLine);
     ui->mainToolBar->insertWidget(ui->actionGo, ui->addressLine);
+
+    QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
 
     QNetworkProxy proxy;
     proxy.setType(QNetworkProxy::Socks5Proxy);
