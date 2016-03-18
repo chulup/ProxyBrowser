@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QFileDialog>
 #include <QLineEdit>
 #include <QLoggingCategory>
 #include <QNetworkProxy>
@@ -11,6 +12,7 @@
 #include <QWebFrame>
 #include <QWebHistory>
 
+#include "qblankwebpage.h"
 #include "constants.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -31,6 +33,10 @@ MainWindow::MainWindow(QWidget *parent) :
     proxy.setUser(PROXY_USER);
     proxy.setPassword(PROXY_PASS);
 //    QNetworkProxy::setApplicationProxy(proxy);
+
+    ui->webView->setPage(new QBlankWebPage());
+    ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
+    ui->webView->settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows, true);
 }
 
 MainWindow::~MainWindow()
@@ -55,19 +61,6 @@ void MainWindow::loadStarted() {
 void MainWindow::loadFinished(bool ok){
     qInfo() << "loadFinished(" << ok << ")";
     updateButtons(ButtonVisible::RELOAD);
-
-    if (!ok) {
-        return;
-    }
-    auto frame = ui->webView->page()->mainFrame();
-    if (frame!=NULL) {
-        QWebElementCollection collection = frame->findAllElements("a[target=_blank]");
-        qInfo() << "Found " << collection.count() << " a[target=_blank] elements on the page. "
-                   "Replacing with _self";
-        foreach (QWebElement element, collection) {
-            element.setAttribute("target", "_self");
-        }
-    }
 }
 
 void MainWindow::openHomePage()
@@ -91,6 +84,18 @@ void MainWindow::openPage(){
 void MainWindow::savePage()
 {
     qInfo() << "savePage";
+    auto filename = QFileDialog::getSaveFileName(this,
+                                                 "Save page as...",
+                                                 QString(),
+                                                 "PDF (*.pdf)");
+    if(filename.isEmpty()) {
+        qInfo() << "    No file selected.";
+        return;
+    }
+    QPrinter printer;
+    printer.setOutputFileName(filename);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    ui->webView->print(&printer);
 }
 
 void MainWindow::printPage()

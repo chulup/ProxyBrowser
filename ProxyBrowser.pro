@@ -14,10 +14,12 @@ TEMPLATE = app
 CONFIG += c++11
 
 SOURCES += sources/main.cpp\
-        sources/mainwindow.cpp
+        sources/mainwindow.cpp \
+    sources/qblankwebpage.cpp
 
 HEADERS  += sources/mainwindow.h \
-    sources/constants.h
+    sources/constants.h \
+    sources/qblankwebpage.h
 
 FORMS    += forms/mainwindow.ui
 
