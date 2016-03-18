@@ -2,12 +2,14 @@
 #include "ui_mainwindow.h"
 
 #include <QLineEdit>
+#include <QLoggingCategory>
+#include <QNetworkProxy>
 #include <QtDebug>
-#include <QWebHistory>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintPreviewDialog>
-#include <QNetworkProxy>
-#include <QLoggingCategory>
+#include <QWebElementCollection>
+#include <QWebFrame>
+#include <QWebHistory>
 
 #include "constants.h"
 
@@ -28,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     proxy.setPort(PROXY_PORT);
     proxy.setUser(PROXY_USER);
     proxy.setPassword(PROXY_PASS);
-    QNetworkProxy::setApplicationProxy(proxy);
+//    QNetworkProxy::setApplicationProxy(proxy);
 }
 
 MainWindow::~MainWindow()
@@ -50,9 +52,22 @@ void MainWindow::loadStarted() {
     updateButtons(ButtonVisible::STOP);
 }
 
-void MainWindow::loadFinished(bool result){
-    qInfo() << "loadFinished(" << result << ")";
+void MainWindow::loadFinished(bool ok){
+    qInfo() << "loadFinished(" << ok << ")";
     updateButtons(ButtonVisible::RELOAD);
+
+    if (!ok) {
+        return;
+    }
+    auto frame = ui->webView->page()->mainFrame();
+    if (frame!=NULL) {
+        QWebElementCollection collection = frame->findAllElements("a[target=_blank]");
+        qInfo() << "Found " << collection.count() << " a[target=_blank] elements on the page. "
+                   "Replacing with _self";
+        foreach (QWebElement element, collection) {
+            element.setAttribute("target", "_self");
+        }
+    }
 }
 
 void MainWindow::openHomePage()
