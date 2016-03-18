@@ -15,11 +15,13 @@ CONFIG += c++11
 
 SOURCES += sources/main.cpp\
         sources/mainwindow.cpp \
-    sources/qblankwebpage.cpp
+    sources/qblankwebpage.cpp \
+    sources/downloadfilehandler.cpp
 
 HEADERS  += sources/mainwindow.h \
     sources/constants.h \
-    sources/qblankwebpage.h
+    sources/qblankwebpage.h \
+    sources/downloadfilehandler.h
 
 FORMS    += forms/mainwindow.ui
 

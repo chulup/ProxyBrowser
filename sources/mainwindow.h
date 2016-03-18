@@ -29,6 +29,8 @@ public slots:
     void openPage();
     void savePage();
     void printPage();
+    void downloadFile(const QNetworkRequest &request);
+
 private:
     Ui::MainWindow *ui;
 };

@@ -9,6 +9,12 @@ public:
     QBlankWebPage();
 
     virtual QWebPage *createWindow(WebWindowType type) override;
+    virtual bool acceptNavigationRequest(QWebFrame *frame,
+                                         const QNetworkRequest &request,
+                                         NavigationType type) override;
+Q_SIGNALS:
+    void requestForFileDownload(const QNetworkRequest &);
+
 };
 
 #endif // QBLANKWEBPAGE_H

@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->webView->setPage(new QBlankWebPage());
     ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
     ui->webView->settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows, true);
+
+    openHomePage();
 }
 
 MainWindow::~MainWindow()
@@ -56,6 +58,7 @@ void MainWindow::updateButtons(MainWindow::ButtonVisible button)
 void MainWindow::loadStarted() {
     qInfo() << "loadStarted";
     updateButtons(ButtonVisible::STOP);
+
 }
 
 void MainWindow::loadFinished(bool ok){
@@ -112,4 +115,16 @@ void MainWindow::printPage()
               });
 
     preview.exec();
+}
+
+void MainWindow::downloadFile(const QNetworkRequest &request)
+{
+    auto filename = QFileDialog::getSaveFileName(this,
+                                                 "Save file as...",
+                                                 QString(),
+                                                 "PDF (*.pdf)");
+    if(filename.isEmpty()) {
+        qInfo() << "    No file selected.";
+        return false;
+    }
 }
