@@ -16,12 +16,12 @@ CONFIG += c++11
 SOURCES += sources/main.cpp\
         sources/mainwindow.cpp \
     sources/qblankwebpage.cpp \
-    sources/downloadfilehandler.cpp
+    sources/filedownloader.cpp
 
 HEADERS  += sources/mainwindow.h \
     sources/constants.h \
     sources/qblankwebpage.h \
-    sources/downloadfilehandler.h
+    sources/filedownloader.h
 
 FORMS    += forms/mainwindow.ui
 

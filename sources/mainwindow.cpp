@@ -14,6 +14,7 @@
 
 #include "qblankwebpage.h"
 #include "constants.h"
+#include "filedownloader.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,9 +35,13 @@ MainWindow::MainWindow(QWidget *parent) :
     proxy.setPassword(PROXY_PASS);
 //    QNetworkProxy::setApplicationProxy(proxy);
 
-    ui->webView->setPage(new QBlankWebPage());
+    auto page = new QBlankWebPage();
+    ui->webView->setPage(page);
     ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
     ui->webView->settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows, true);
+
+    connect(page, &QBlankWebPage::requestForFileDownload,
+            this, &MainWindow::downloadFile);
 
     openHomePage();
 }
@@ -119,12 +124,24 @@ void MainWindow::printPage()
 
 void MainWindow::downloadFile(const QNetworkRequest &request)
 {
-    auto filename = QFileDialog::getSaveFileName(this,
-                                                 "Save file as...",
-                                                 QString(),
-                                                 "PDF (*.pdf)");
-    if(filename.isEmpty()) {
-        qInfo() << "    No file selected.";
-        return false;
+    _fileDownloaders.push_back(new FileDownloader(this, request));
+}
+
+void MainWindow::fileDownloadStarted(FileDownloader *downloader)
+{
+    qInfo() << "MainWindow::fileDownloadStarted";
+}
+
+void MainWindow::fileDownloadFinished(FileDownloader *downloader)
+{
+    if (downloader->downloadFinishedSuccessfully() ) {
+        qInfo() << "MainWindow::fileDownloadFinished successfully";
+    } else {
+        qInfo() << "MainWindow::fileDownloadFinished with error: " << downloader->downloadError();
+    }
+    auto index = _fileDownloaders.indexOf(downloader);
+    if (index != -1) {
+        delete downloader;
+        _fileDownloaders.removeAt(index);
     }
 }

@@ -5,6 +5,7 @@
 
 class QBlankWebPage : public QWebPage
 {
+    Q_OBJECT
 public:
     QBlankWebPage();
 
@@ -13,7 +14,7 @@ public:
                                          const QNetworkRequest &request,
                                          NavigationType type) override;
 Q_SIGNALS:
-    void requestForFileDownload(const QNetworkRequest &);
+    void requestForFileDownload(const QNetworkRequest &request);
 
 };
 

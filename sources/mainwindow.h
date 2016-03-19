@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QList>
+
+class FileDownloader;
+class QNetworkRequest;
 
 namespace Ui {
 class MainWindow;
@@ -31,8 +35,12 @@ public slots:
     void printPage();
     void downloadFile(const QNetworkRequest &request);
 
+    void fileDownloadStarted(FileDownloader *downloader);
+    void fileDownloadFinished(FileDownloader *downloader);
+
 private:
     Ui::MainWindow *ui;
+    QList<FileDownloader*> _fileDownloaders;
 };
 
 #endif // MAINWINDOW_H
