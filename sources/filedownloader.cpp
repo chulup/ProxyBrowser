@@ -18,6 +18,16 @@ bool FileDownloader::downloadFinishedSuccessfully() const
     return _downloadError.isEmpty();
 }
 
+QString FileDownloader::filename() const
+{
+    return _file->fileName();
+}
+
+QUrl FileDownloader::url() const
+{
+    return _request.url();
+}
+
 void FileDownloader::beginDownload()
 {
     // Make our strings for the File
@@ -43,8 +53,13 @@ void FileDownloader::beginDownload()
     _networkReply.reset(_networkManager.get(_request));
     _window->fileDownloadStarted(this);
 
-    // Setup signals/slots
-    connect(_networkReply.data(), &QNetworkReply::finished, this, &FileDownloader::downloadFinished);
+    /* Strange things did happen here,
+     * No strange would it seem
+     * If C++14 met this code
+     * And did not compile...
+     * */
+    //connect(_networkReply.data(), &QNetworkReply::finished, this, &FileDownloader::downloadFinished);
+    connect(_networkReply.data(), &QNetworkReply::finished, [this]() { this->downloadFinished();});
     connect(_networkReply.data(), &QNetworkReply::readyRead, this, &FileDownloader::downloadReadyRead);
 }
 
@@ -72,8 +87,6 @@ void FileDownloader::downloadFinished()
 
     _networkReply->deleteLater(); // Very important that we use deleteLater()!
     _networkReply.reset();
-
-    _file.reset();
 
     // Tell the application we are done
     _window->fileDownloadFinished(this);

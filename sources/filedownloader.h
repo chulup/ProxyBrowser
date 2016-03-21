@@ -21,8 +21,14 @@ public:
 
     bool downloadFinishedSuccessfully() const;
     const QString &downloadError() const { return _downloadError; }
+    QString filename() const;
+    QUrl url() const;
 
-public slots:
+Q_SIGNALS:
+    void downloadStarted(FileDownloader *downloader);
+    void downloadFinished(FileDownloader *downloader);
+
+public Q_SLOTS:
     void beginDownload();
     void cancelDownload();
     void downloadFinished();

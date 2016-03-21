@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QList>
+#include <QSharedPointer>
 
 class FileDownloader;
 class QNetworkRequest;
@@ -40,7 +41,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    QList<FileDownloader*> _fileDownloaders;
+    QList<QSharedPointer<FileDownloader>> _fileDownloaders;
 };
 
 #endif // MAINWINDOW_H

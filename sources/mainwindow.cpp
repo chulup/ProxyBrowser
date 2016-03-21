@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QDesktopServices>
+#include <QErrorMessage>
 #include <QFileDialog>
 #include <QLineEdit>
 #include <QLoggingCategory>
@@ -124,24 +126,28 @@ void MainWindow::printPage()
 
 void MainWindow::downloadFile(const QNetworkRequest &request)
 {
-    _fileDownloaders.push_back(new FileDownloader(this, request));
+    _fileDownloaders.push_back(QSharedPointer<FileDownloader>::create(this, request));
 }
 
 void MainWindow::fileDownloadStarted(FileDownloader *downloader)
 {
-    qInfo() << "MainWindow::fileDownloadStarted";
+    qInfo() << "MainWindow::fileDownloadStarted for url " << downloader->url();
 }
 
 void MainWindow::fileDownloadFinished(FileDownloader *downloader)
 {
     if (downloader->downloadFinishedSuccessfully() ) {
-        qInfo() << "MainWindow::fileDownloadFinished successfully";
+        qInfo() << "MainWindow::fileDownloadFinished successfully. Opening the file...";
+        if( !QDesktopServices::openUrl(QUrl::fromLocalFile(downloader->filename())) ) {
+            QErrorMessage::qtHandler()->showMessage(
+                        "File was downloaded successfully but could not be opened automatically. "
+                        "You may open it manually.\n"
+                        "File name: " + downloader->filename());
+        }
     } else {
         qInfo() << "MainWindow::fileDownloadFinished with error: " << downloader->downloadError();
     }
-    auto index = _fileDownloaders.indexOf(downloader);
-    if (index != -1) {
-        delete downloader;
-        _fileDownloaders.removeAt(index);
-    }
+    std::remove_if(std::begin(_fileDownloaders),
+                   std::end(_fileDownloaders),
+                   [downloader](auto pointer) { return pointer.data() == downloader; });
 }
