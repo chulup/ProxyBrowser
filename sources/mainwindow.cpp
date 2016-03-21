@@ -156,5 +156,8 @@ void MainWindow::fileDownloadFinished(FileDownloader *downloader)
     }
     std::remove_if(std::begin(_fileDownloaders),
                    std::end(_fileDownloaders),
-                   [downloader](auto pointer) { return pointer.data() == downloader; });
+                   [downloader](QSharedPointer<FileDownloader> pointer)
+                    {
+                        return pointer == downloader;
+                    });
 }
