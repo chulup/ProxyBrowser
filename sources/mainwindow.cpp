@@ -94,10 +94,12 @@ void MainWindow::openPage(){
 void MainWindow::savePage()
 {
     qInfo() << "savePage";
+    auto pagename = ui->webView->title().toHtmlEscaped();
     auto filename = QFileDialog::getSaveFileName(this,
                                                  "Save page as...",
                                                  QString(),
-                                                 "PDF (*.pdf)");
+                                                 "PDF (*.pdf)",
+                                                 &pagename);
     if(filename.isEmpty()) {
         qInfo() << "    No file selected.";
         return;
