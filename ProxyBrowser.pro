@@ -27,3 +27,5 @@ FORMS    += forms/mainwindow.ui
 
 RESOURCES += \
     icons.qrc
+
+ICON = icone2.icns
