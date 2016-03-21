@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../icons.qrc">
+    <normaloff>:/icons/resources/icone2.ico</normaloff>:/icons/resources/icone2.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
@@ -34,8 +38,8 @@
      <widget class="QLineEdit" name="addressLine"/>
     </item>
     <item>
-     <widget class="QWebView" name="webView">
-      <property name="url">
+     <widget class="QWebView" name="webView" native="true">
+      <property name="url" stdset="0">
        <url>
         <string>about:blank</string>
        </url>
