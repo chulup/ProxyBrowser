@@ -73,6 +73,11 @@ void MainWindow::loadFinished(bool ok){
     updateButtons(ButtonVisible::RELOAD);
 }
 
+void MainWindow::titleChanged(const QString &title)
+{
+    setWindowTitle(title);
+}
+
 void MainWindow::openHomePage()
 {
     qInfo() << "loadStarted";

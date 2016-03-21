@@ -30,6 +30,7 @@ private:
 public slots:
     void loadStarted();
     void loadFinished(bool);
+    void titleChanged(const QString& title);
     void openHomePage();
     void openPage();
     void savePage();
