@@ -29,3 +29,6 @@ RESOURCES += \
     icons.qrc
 
 ICON = icone2.icns
+
+DISTFILES += \
+    config.ini

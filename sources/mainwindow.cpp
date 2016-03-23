@@ -20,7 +20,9 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    _settings(QApplication::applicationDirPath() + "/config.ini",
+              QSettings::Format::IniFormat)
 {
     ui->setupUi(this);
 
@@ -29,13 +31,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
 
-    if (PROXY_ENABLED) {
+    auto keys = _settings.allKeys();
+    foreach (auto key, keys) {
+        qInfo() << "   " << key << ": " << _settings.value(key);
+    }
+
+    if (_settings.value("proxy.enabled", QVariant(false)).toString() == "yes") {
         QNetworkProxy proxy;
         proxy.setType(QNetworkProxy::Socks5Proxy);
-        proxy.setHostName(PROXY_HOST);
-        proxy.setPort(PROXY_PORT);
-        proxy.setUser(PROXY_USER);
-        proxy.setPassword(PROXY_PASS);
+        proxy.setHostName(_settings.value("proxy.host").toString());
+        proxy.setPort(_settings.value("proxy.port").toInt());
+        proxy.setUser(_settings.value("proxy.username").toString());
+        proxy.setPassword(_settings.value("proxy.password").toString());
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
@@ -49,7 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&_timer, &QTimer::timeout, this, &MainWindow::loadTimeout);
     _timer.setSingleShot(true);
-    _timer.setInterval(CONNECT_TIMEOUT);
+    _timer.setInterval(_settings.value("general.timeout",
+                                       QVariant(10000)).toInt());
 
     openHomePage();
 }
@@ -103,7 +111,8 @@ void MainWindow::titleChanged(const QString &title)
 void MainWindow::openHomePage()
 {
     qInfo() << "loadStarted";
-    ui->addressLine->setText(HOME_PAGE);
+    ui->addressLine->setText(_settings.value("general.homePage",
+                                             QVariant("http://reddit.com")).toString());
     ui->actionGo->trigger();
 }
 
