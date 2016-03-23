@@ -79,7 +79,7 @@ void MainWindow::loadStarted() {
 void MainWindow::loadTimeout()
 {
     qInfo() << "loadTimeout, bytes: " << ui->webView->page()->bytesReceived();
-    if( ui->webView->page()->bytesReceived() < 94 /* chosen by fair dice */ ) {
+    if( ui->webView->page()->bytesReceived() < 94 /* chosen by fair dice roll */ ) {
         ui->webView->stop();
         ui->webView->setHtml("<h1> Connection timeout </h1>");
     }
@@ -90,6 +90,7 @@ void MainWindow::loadFinished(bool ok){
     updateButtons(ButtonVisible::RELOAD);
     if (!ok) {
         setWindowTitle("Load failed: " +  ui->addressLine->text());
+        ui->webView->setHtml("<h1> Connection timeout </h1>");
     }
     _timer.stop();
 }
