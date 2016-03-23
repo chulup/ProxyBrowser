@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QList>
 #include <QSharedPointer>
+#include <QTimer>
 
 class FileDownloader;
 class QNetworkRequest;
@@ -29,6 +30,7 @@ private:
 
 public slots:
     void loadStarted();
+    void loadTimeout();
     void loadFinished(bool);
     void titleChanged(const QString& title);
     void openHomePage();
@@ -43,6 +45,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
     QList<QSharedPointer<FileDownloader>> _fileDownloaders;
+    QTimer _timer;
 };
 
 #endif // MAINWINDOW_H

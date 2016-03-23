@@ -29,13 +29,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
 
-    QNetworkProxy proxy;
-    proxy.setType(QNetworkProxy::Socks5Proxy);
-    proxy.setHostName(PROXY_HOST);
-    proxy.setPort(PROXY_PORT);
-    proxy.setUser(PROXY_USER);
-    proxy.setPassword(PROXY_PASS);
-//    QNetworkProxy::setApplicationProxy(proxy);
+    if (PROXY_ENABLED) {
+        QNetworkProxy proxy;
+        proxy.setType(QNetworkProxy::Socks5Proxy);
+        proxy.setHostName(PROXY_HOST);
+        proxy.setPort(PROXY_PORT);
+        proxy.setUser(PROXY_USER);
+        proxy.setPassword(PROXY_PASS);
+        QNetworkProxy::setApplicationProxy(proxy);
+    }
 
     auto page = new QBlankWebPage();
     ui->webView->setPage(page);
@@ -44,6 +46,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(page, &QBlankWebPage::requestForFileDownload,
             this, &MainWindow::downloadFile);
+
+    connect(&_timer, &QTimer::timeout, this, &MainWindow::loadTimeout);
+    _timer.setSingleShot(true);
+    _timer.setInterval(CONNECT_TIMEOUT);
 
     openHomePage();
 }
@@ -57,7 +63,9 @@ void MainWindow::updateButtons(MainWindow::ButtonVisible button)
 {
     ui->actionReload->setVisible(button == ButtonVisible::RELOAD);
     ui->actionStop->setVisible(button == ButtonVisible::STOP);
-    ui->addressLine->setText(ui->webView->url().toString());
+    if ( !ui->webView->url().isEmpty() ){
+        ui->addressLine->setText(ui->webView->url().toString());
+    }
     ui->actionBackward->setEnabled(ui->webView->history()->canGoBack());
     ui->actionForward->setEnabled(ui->webView->history()->canGoForward());
 }
@@ -65,12 +73,25 @@ void MainWindow::updateButtons(MainWindow::ButtonVisible button)
 void MainWindow::loadStarted() {
     qInfo() << "loadStarted";
     updateButtons(ButtonVisible::STOP);
+    _timer.start();
+}
 
+void MainWindow::loadTimeout()
+{
+    qInfo() << "loadTimeout, bytes: " << ui->webView->page()->bytesReceived();
+    if( ui->webView->page()->bytesReceived() < 94 /* chosen by fair dice */ ) {
+        ui->webView->stop();
+        ui->webView->setHtml("<h1> Connection timeout </h1>");
+    }
 }
 
 void MainWindow::loadFinished(bool ok){
     qInfo() << "loadFinished(" << ok << ")";
     updateButtons(ButtonVisible::RELOAD);
+    if (!ok) {
+        setWindowTitle("Load failed: " +  ui->addressLine->text());
+    }
+    _timer.stop();
 }
 
 void MainWindow::titleChanged(const QString &title)
