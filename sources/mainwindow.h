@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QList>
+#include <QSettings>
 #include <QSharedPointer>
 #include <QTimer>
 
@@ -46,6 +47,7 @@ private:
     Ui::MainWindow *ui;
     QList<QSharedPointer<FileDownloader>> _fileDownloaders;
     QTimer _timer;
+    QSettings _settings;
 };
 
 #endif // MAINWINDOW_H

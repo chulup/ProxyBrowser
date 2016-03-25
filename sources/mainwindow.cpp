@@ -20,7 +20,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    _settings(CNAME, PNAME)
 {
     ui->setupUi(this);
 
@@ -29,13 +30,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
 
-    if (PROXY_ENABLED) {
+    if (_settings.value("proxy.enabled", QVariant(PROXY_ENABLED)).toBool()) {
         QNetworkProxy proxy;
         proxy.setType(QNetworkProxy::Socks5Proxy);
-        proxy.setHostName(PROXY_HOST);
-        proxy.setPort(PROXY_PORT);
-        proxy.setUser(PROXY_USER);
-        proxy.setPassword(PROXY_PASS);
+        proxy.setHostName(_settings.value("proxy.host", QVariant(PROXY_HOST)).toString());
+        proxy.setPort(_settings.value("proxy.port", QVariant(PROXY_PORT)).toInt());
+        proxy.setUser(_settings.value("proxy.user", QVariant(PROXY_USER)).toString());
+        proxy.setPassword(_settings.value("proxy.pass", QVariant(PROXY_PASS)).toString());
         QNetworkProxy::setApplicationProxy(proxy);
     }
 
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&_timer, &QTimer::timeout, this, &MainWindow::loadTimeout);
     _timer.setSingleShot(true);
-    _timer.setInterval(CONNECT_TIMEOUT);
+    _timer.setInterval(_settings.value("general.timeout", QVariant(CONNECT_TIMEOUT)).toInt());
 
     openHomePage();
 }

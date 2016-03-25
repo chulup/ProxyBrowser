@@ -10,3 +10,6 @@ const char *PROXY_PASS = "";
 const bool PROXY_ENABLED = true;
 
 const int CONNECT_TIMEOUT = 10000; /* milliseconds */
+
+const char *CNAME = "chulup";
+const char *PNAME = "ProxyBrowser";
