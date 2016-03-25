@@ -1,15 +1,24 @@
 #pragma once
 
-const char *HOME_PAGE  = "http://www.sboc.org.br/";
+#define HOME_PAGE   "http://www.sboc.org.br/"
 
-const char *PROXY_HOST = "proxy.sboc.org.br";
-const int   PROXY_PORT = 3128;
-const char *PROXY_USER = "";
-const char *PROXY_PASS = "";
+#define PROXY_HOST  "proxy.sboc.org.br"
+#define PROXY_PORT  3128
+#define PROXY_USER  ""
+#define PROXY_PASS  ""
 
-const bool PROXY_ENABLED = true;
+#define PROXY_ENABLED  true
 
-const int CONNECT_TIMEOUT = 10000; /* milliseconds */
+#define CONNECT_TIMEOUT  10000 /* milliseconds */
 
-const char *CNAME = "chulup";
-const char *PNAME = "ProxyBrowser";
+#define CNAME  "chulup"
+#define PNAME  "ProxyBrowser"
+
+
+#define SET_HOME_PAGE        "general.homepage"
+#define SET_TIMEOUT          "general.timeout"
+#define SET_PROXY_HOST       "proxy.host"
+#define SET_PROXY_PORT       "proxy.port"
+#define SET_PROXY_USER       "proxy.user"
+#define SET_PROXY_PASS       "proxy.pass"
+#define SET_PROXY_ENABLED    "proxy.enabled"

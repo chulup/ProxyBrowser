@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QList>
-#include <QSettings>
 #include <QSharedPointer>
 #include <QTimer>
 
@@ -26,6 +25,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void rereadSettings();
+
 private:
     void updateButtons(ButtonVisible button);
 
@@ -43,11 +44,12 @@ public slots:
     void fileDownloadStarted(FileDownloader *downloader);
     void fileDownloadFinished(FileDownloader *downloader);
 
+    void showSettings();
+
 private:
     Ui::MainWindow *ui;
     QList<QSharedPointer<FileDownloader>> _fileDownloaders;
     QTimer _timer;
-    QSettings _settings;
 };
 
 #endif // MAINWINDOW_H

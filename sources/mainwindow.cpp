@@ -10,6 +10,7 @@
 #include <QtDebug>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintPreviewDialog>
+#include <QSettings>
 #include <QWebElementCollection>
 #include <QWebFrame>
 #include <QWebHistory>
@@ -17,28 +18,21 @@
 #include "qblankwebpage.h"
 #include "constants.h"
 #include "filedownloader.h"
+#include "settings.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    _settings(CNAME, PNAME)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QCoreApplication::setOrganizationName(CNAME);
+    QCoreApplication::setApplicationName(PNAME);
 
     ui->centralWidget->layout()->removeWidget(ui->addressLine);
     ui->mainToolBar->insertWidget(ui->actionGo, ui->addressLine);
 
     QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
-
-    if (_settings.value("proxy.enabled", QVariant(PROXY_ENABLED)).toBool()) {
-        QNetworkProxy proxy;
-        proxy.setType(QNetworkProxy::Socks5Proxy);
-        proxy.setHostName(_settings.value("proxy.host", QVariant(PROXY_HOST)).toString());
-        proxy.setPort(_settings.value("proxy.port", QVariant(PROXY_PORT)).toInt());
-        proxy.setUser(_settings.value("proxy.user", QVariant(PROXY_USER)).toString());
-        proxy.setPassword(_settings.value("proxy.pass", QVariant(PROXY_PASS)).toString());
-        QNetworkProxy::setApplicationProxy(proxy);
-    }
 
     auto page = new QBlankWebPage();
     ui->webView->setPage(page);
@@ -47,10 +41,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(page, &QBlankWebPage::requestForFileDownload,
             this, &MainWindow::downloadFile);
-
     connect(&_timer, &QTimer::timeout, this, &MainWindow::loadTimeout);
-    _timer.setSingleShot(true);
-    _timer.setInterval(_settings.value("general.timeout", QVariant(CONNECT_TIMEOUT)).toInt());
+
+    rereadSettings();
 
     openHomePage();
 }
@@ -104,7 +97,8 @@ void MainWindow::titleChanged(const QString &title)
 void MainWindow::openHomePage()
 {
     qInfo() << "loadStarted";
-    ui->addressLine->setText(HOME_PAGE);
+    QSettings settings;
+    ui->addressLine->setText(settings.value(SET_HOME_PAGE, QVariant(HOME_PAGE)).toString());
     ui->actionGo->trigger();
 }
 
@@ -182,5 +176,31 @@ void MainWindow::fileDownloadFinished(FileDownloader *downloader)
                    [downloader](QSharedPointer<FileDownloader> pointer)
                     {
                         return pointer == downloader;
-                    });
+    });
+}
+
+void MainWindow::rereadSettings()
+{
+    QSettings settings;
+    if (settings.value(SET_PROXY_ENABLED, QVariant(PROXY_ENABLED)).toBool()) {
+        QNetworkProxy proxy;
+        proxy.setType(QNetworkProxy::Socks5Proxy);
+        proxy.setHostName(settings.value(SET_PROXY_HOST, QVariant(PROXY_HOST)).toString());
+        proxy.setPort(settings.value(SET_PROXY_PORT, QVariant(PROXY_PORT)).toInt());
+        proxy.setUser(settings.value(SET_PROXY_USER, QVariant(PROXY_USER)).toString());
+        proxy.setPassword(settings.value(SET_PROXY_PASS, QVariant(PROXY_PASS)).toString());
+        QNetworkProxy::setApplicationProxy(proxy);
+    }
+
+    _timer.setSingleShot(true);
+    _timer.setInterval(settings.value(SET_TIMEOUT, QVariant(CONNECT_TIMEOUT)).toInt());
+}
+
+void MainWindow::showSettings()
+{
+    Settings dlg(this);
+    dlg.show();
+    if(dlg.exec() == QDialog::Accepted) {
+        rereadSettings();
+    }
 }

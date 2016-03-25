@@ -10,5 +10,6 @@
         <file>resources/save.png</file>
         <file>resources/stop.png</file>
         <file>resources/icone2.ico</file>
+        <file>resources/settings.png</file>
     </qresource>
 </RCC>
